@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar PDF de Teste</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .btn {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Gerador de PDF de Teste</h1>
+    <p>Clique no botão abaixo para gerar um PDF de teste que pode ser usado para testar as funcionalidades de conversão.</p>
+    
+    <button class="btn" onclick="generateTestPDF()">📄 Gerar PDF de Teste</button>
+    <button class="btn" onclick="window.open('./test-functionality.html', '_blank')">🔧 Abrir Testes</button>
+    
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="./create-test-pdf.js"></script>
+    
+    <script>
+        async function generateTestPDF() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Gerando PDF de teste...';
+            
+            try {
+                const pdfBytes = await createTestPDF();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'teste-bestofthepdf.pdf';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                result.innerHTML = '✅ PDF de teste gerado e baixado com sucesso!<br><small>Use este arquivo para testar as funcionalidades de conversão.</small>';
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+            } catch (error) {
+                result.innerHTML = '❌ Erro ao gerar PDF: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
+
